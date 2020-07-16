@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ACE Autocompletion demo</title>
+  <style type="text/css" media="screen">
+    body {
+        overflow: hidden;
+    }
+    
+    #editor { 
+        margin: 0 40px;
+        position: relative;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 400px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>C / C++ Editor</h1>
+<small> Use Ctrl + Alt + H to Show Keyboard Shortcut Option</small>
+
+
+<!--Code Editor-->
+
+<pre id="editor"></pre>
+
+<!--Textarea For form Submitting-->
+
+<textarea name="code" id="code" style="display: none;"></textarea>
+
+
+<!-- load ace -->
+<script src="src/ace.js"></script>
+<!-- load ace language tools -->
+<script src="src/ext-language_tools.js"></script>
+<script>
+    // trigger extension
+    ace.require("ace/ext/language_tools");
+    var editor = ace.edit("editor");
+   
+    
+    editor.session.setMode("ace/mode/c_cpp");
+    editor.setTheme("ace/theme/xcode");
+    // enable autocompletion and snippets
+    editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: false
+    });
+
+     editor.commands.addCommand({
+        name: "showKeyboardShortcuts",
+        bindKey: { win: "Ctrl-Alt-h", mac: "Command-Alt-h" },
+        exec: function (editor) {
+          ace.config.loadModule("ace/ext/keybinding_menu", function (module) {
+            module.init(editor);
+            editor.showKeyboardShortcuts()
+          })
+        }
+      })
+     var textarea = document.getElementById('code');
+      editor.getSession().on("change", function () {
+        textarea.value = editor.getSession().getValue();
+      });
+</script>
+</body>
+</html>
